@@ -168,12 +168,18 @@ public class ScannerPreview extends ActionBarActivity {
         @Override
         public void run() {
             Log.d("Handlers", "Moving reel");
-            if(isMoving)
+            if(isMoving) {
+                Log.d("DEBUG: ", "isMoving = true");
                 try {
+                    sleep(100);
                     btSocket.getOutputStream().write('1');
+                    Log.d("DEBUG", "Wrote 1 to socket");
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
             handler.postDelayed(movingCode, 480);
         }
     };
@@ -184,6 +190,8 @@ public class ScannerPreview extends ActionBarActivity {
         {
             try
             {
+                btSocket.getOutputStream().write('Q');
+                Log.d("DEBUG", "Wrote Q to socket");
                 btSocket.close(); //close connection
             }
             catch (IOException e)
