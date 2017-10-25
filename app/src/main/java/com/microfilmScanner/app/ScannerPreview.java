@@ -213,7 +213,7 @@ public class ScannerPreview extends ActionBarActivity {
     // fast way to call Toast
     private void msg(String s)
     {
-        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
     }
 
     @Override
