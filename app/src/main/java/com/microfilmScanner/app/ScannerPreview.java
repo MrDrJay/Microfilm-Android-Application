@@ -104,6 +104,7 @@ public class ScannerPreview extends ActionBarActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        Play.setBackgroundResource(R.drawable.play_button); // initial declaration for the play button's image
 
         new ConnectBT().execute(); //Call the class to connect
 
@@ -113,7 +114,14 @@ public class ScannerPreview extends ActionBarActivity {
             @Override
             public void onClick(View v)
             {
-                playFunc();      //method to turn on
+                if(!playing) {
+                    playFunc(); //method to turn on
+                    Play.setBackgroundResource(R.drawable.pause_button);
+                }
+                else {
+                    pauseFunc();
+                    Play.setBackgroundResource(R.drawable.play_button);
+                }
             }
         });
 
@@ -190,6 +198,8 @@ public class ScannerPreview extends ActionBarActivity {
         {
             try
             {
+                isMoving = false;
+                playing = false;
                 btSocket.getOutputStream().write('Q');
                 Log.d("DEBUG", "Wrote Q to socket");
                 btSocket.close(); //close connection
@@ -207,6 +217,15 @@ public class ScannerPreview extends ActionBarActivity {
         {
             isMoving = true;
             playing = true;
+        }
+    }
+
+    private void pauseFunc()
+    {
+        if (btSocket!=null)
+        {
+            isMoving = false;
+            playing = false;
         }
     }
 
