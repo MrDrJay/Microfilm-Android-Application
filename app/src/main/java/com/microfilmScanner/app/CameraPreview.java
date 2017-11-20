@@ -32,12 +32,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             int bot1 = multipleRowAverage(ScannerPreview.currentBotY+20,20,height,width);
             int bot2 = multipleRowAverage(ScannerPreview.currentBotY-20,20,height,width);
             //Outuput the value of the top left pixel in the preview to LogCat
-            boolean top = false;
+            boolean top = true;
             if(isBlack(topBar,60)|| isBlack(top1,60) || isBlack(top2,60)) {
                 Log.i("Pixels", "Top Bar is black");
                 top = true;
             }
             boolean bot = false;
+
             if(isBlack(botBar,60)|| isBlack(bot1,60) || isBlack(bot2,60)) {
                 Log.i("Pixels", "Bottom Bar is black");
                 bot = true;

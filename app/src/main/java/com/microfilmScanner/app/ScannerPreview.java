@@ -1,6 +1,7 @@
 package com.microfilmScanner.app;
 
 import android.hardware.Camera;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -28,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
 import java.util.UUID;
 
 import static java.lang.Thread.sleep;
@@ -48,6 +50,8 @@ public class ScannerPreview extends ActionBarActivity {
     private CameraPreview mPreview = null;
     ImageView top = null;
     ImageView bot = null;
+    CountDownTimer timer;
+    boolean takePictureEnabled = true;
     public static int currentTopY = 0;
     public static int currentBotY = 0;
     boolean topBarBlack = false;
@@ -156,6 +160,17 @@ public class ScannerPreview extends ActionBarActivity {
         currentBotY = dimensions.width-400;
         handler.post(runnableCode);
         handler.post(movingCode);
+        timer = new CountDownTimer(3000,1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                takePictureEnabled = true;
+            }
+        };
         File folder = new File(Environment.getExternalStorageDirectory() +
                 File.separator + "ScannerApp");
         boolean success = true;
@@ -311,6 +326,9 @@ public class ScannerPreview extends ActionBarActivity {
     private class SavePhotoTask extends AsyncTask<byte[], String, String> {
         @Override
         protected String doInBackground(byte[]... jpeg) {
+            if(!takePictureEnabled)
+                return(null);
+
             safePic = false;
             File photo = new File(Environment.getExternalStorageDirectory()+"/ScannerApp",
                     (new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()))+".jpg");
@@ -324,6 +342,8 @@ public class ScannerPreview extends ActionBarActivity {
 
                 fos.write(jpeg[0]);
                 fos.close();
+                timer.start();
+                takePictureEnabled = false;
             }
             catch (Exception e) {
                 Log.e("PictureDemo", "Exception in photoCallback", e);
