@@ -33,7 +33,9 @@
         android:adjustViewBounds="false"
         android:background="#8056B3CD"
         android:scaleType="fitXY"
-        android:src="@drawable/box" />
+        android:src="@drawable/box"
+        android:visibility="gone"
+        />
 
     <ImageButton
         android:id="@+id/play"

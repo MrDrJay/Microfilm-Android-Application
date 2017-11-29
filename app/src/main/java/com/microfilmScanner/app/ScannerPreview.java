@@ -168,6 +168,7 @@ public class ScannerPreview extends ActionBarActivity {
 
             @Override
             public void onFinish() {
+                Log.d("DEBUG: ", "timer finished, setting to true");
                 takePictureEnabled = true;
             }
         };
@@ -300,7 +301,7 @@ public class ScannerPreview extends ActionBarActivity {
                 bot.setBackgroundColor(inactive);
             }
         }
-        if(topIsBlack && botIsBlack && openCamera) {
+        if(topIsBlack && botIsBlack && openCamera && takePictureEnabled) {
             isMoving = false;
             openCamera = false;
             boolean picturenottaken = true;
@@ -308,6 +309,8 @@ public class ScannerPreview extends ActionBarActivity {
                 try {
                     c.takePicture(null, null, rawPic);
                     picturenottaken = false;
+                    takePictureEnabled = false;
+                    timer.start();
                 } catch (Exception e) {
                     Log.e("Camera", e.toString());
                 }
@@ -326,9 +329,6 @@ public class ScannerPreview extends ActionBarActivity {
     private class SavePhotoTask extends AsyncTask<byte[], String, String> {
         @Override
         protected String doInBackground(byte[]... jpeg) {
-            if(!takePictureEnabled)
-                return(null);
-
             safePic = false;
             File photo = new File(Environment.getExternalStorageDirectory()+"/ScannerApp",
                     (new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()))+".jpg");
@@ -336,13 +336,11 @@ public class ScannerPreview extends ActionBarActivity {
             if (photo.exists()) {
                 photo.delete();
             }
-
             try {
                 FileOutputStream fos=new FileOutputStream(photo.getPath());
 
                 fos.write(jpeg[0]);
                 fos.close();
-                timer.start();
                 takePictureEnabled = false;
             }
             catch (Exception e) {
